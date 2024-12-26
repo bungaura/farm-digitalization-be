@@ -38,7 +38,7 @@ Dependencies
 3. Set Up the Database
 Run the SQL scripts provided in the scripts/ folder to create and populate the database schema:
 ```bash
-mysql -u root -p farm_management < scripts/schema.sql
+mysql -u root -p farm_schema < scripts/schema.sql
 ```
 
 5. Start the Server
