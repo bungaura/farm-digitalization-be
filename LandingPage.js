@@ -25,7 +25,7 @@ const getHomePage = (req, res) => {
               }
     
               h1 {
-                color: #794cff;
+                color: #688557;
                 font-size: 24px;
                 margin-bottom: 20px;
               }
@@ -38,7 +38,7 @@ const getHomePage = (req, res) => {
           </head>
           <body>
             <div class="container">
-              <h1>Welcome to Oculab Endpoint</h1>
+              <h1>Welcome to Ternakku Endpoint</h1>
               <p>Unauthorized access is strictly prohibited!</p>
             </div>
           </body>

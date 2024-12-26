@@ -1,29 +1,21 @@
-const mysql = require("mysql2");
+const { Sequelize } = require("sequelize");
 const dotenv = require("dotenv");
 
 dotenv.config();
 
-const pool = mysql.createPool({
-  host: process.env.LOCAL_DB_HOST,
-  user: process.env.LOCAL_DB_USER,
-  database: process.env.LOCAL_DB_NAME,
-  port: process.env.LOCAL_DB_PORT,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
-
-const db = pool.promise();
-
-(async () => {
-  try {
-    const [rows] = await db.query("SELECT 1");
-    console.log(
-      "Database connected successfully on http://localhost/phpmyadmin/"
-    );
-  } catch (err) {
-    console.error("Error connecting to the database:", err.message);
+const sequelize = new Sequelize(
+  process.env.LOCAL_DB_NAME, // Database name
+  process.env.LOCAL_DB_USER, // Database username
+  process.env.LOCAL_DB_PASS, // Database password
+  {
+    host: process.env.LOCAL_DB_HOST, // Hostname, e.g., 'localhost'
+    dialect: "mysql", // Set to 'mysql' for MySQL databases
   }
-})();
+);
 
-module.exports = db;
+sequelize
+  .authenticate()
+  .then(() => console.log("Database connected successfully"))
+  .catch((err) => console.error("Unable to connect to the database:", err));
+
+module.exports = sequelize;
