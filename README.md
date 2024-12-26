@@ -22,50 +22,34 @@ Before you begin, ensure you have the following installed on your system:
 # Installation
 
 1. Clone the Repository
-
 ```bash
 git clone https://github.com/bungaura/farm-digitalization-be.git
 ```
 
 2. Install Dependencies
-
 ```bash
 npm install [dependencies]
 ```
-
 Dependencies
-
 - mysql2: Database integration for Node.js
 - dotenv: Manage environment variables
 - express: Backend framework
 - nodemon: Auto-restart server during development
 
 3. Set Up the Database
-   Run the SQL scripts provided in the scripts/ folder to create and populate the database schema:
-
+Run the SQL scripts provided in the scripts/ folder to create and populate the database schema:
 ```bash
 mysql -u root -p farm_schema < scripts/schema.sql
 ```
 
-5. Start the Server
-
+4. Start the Server
 ```bash
 npm run dev
 ```
-
 The server will start on http://localhost:3000.
 
-4. Test API Endpoints
+5. Test API Endpoints
    Use tools like Postman to test the API endpoints.
-
-5. Test the database connection:
-   GET http://localhost:3000/test-db
-
-6. Start Development Server:
-
-```bash
-npm run dev
-```
 
 License
 This project is licensed under the MIT License.
