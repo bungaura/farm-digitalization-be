@@ -13,7 +13,8 @@ const sequelize = new Sequelize(
     dialect: "mysql",
     dialectOptions: {
       ssl: {
-        rejectUnauthorized: false,
+        require: true,
+        ca: require("fs").readFileSync("./src/database/rds-ca-cert.pem"),
       },
     },
   }
