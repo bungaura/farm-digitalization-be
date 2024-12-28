@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/database");
-const Farm = require("./Farm.model");
-const Breed = require("./Breed.model");
+const Farm = require("../Entity/Farm.model");
+const Breed = require("../Entity/Breed.model");
 const LivestockGender = require("../Enum/LivestockGender.enum");
 const LivestockPhase = require("../Enum/LivestockPhase.enum");
 
@@ -36,6 +36,14 @@ const Livestock = sequelize.define(
     },
     grade: {
       type: DataTypes.STRING(50),
+    },
+    breed_id: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    type_id: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
   },
   {
