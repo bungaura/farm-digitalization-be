@@ -1,5 +1,8 @@
+ 
+CREATE DATABASE farm_db;
+USE farm_db;
 
--- Set up database tables for Ternakku farm backend system
+-- Set up database tables for farm backend system
 
 CREATE TABLE Users (
     id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
@@ -12,7 +15,7 @@ CREATE TABLE Users (
 CREATE TABLE Farms (
     id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    owner_id CHAR(36) NOT NULL, 
+    owner_id CHAR(36) NOT NULaL, 
     FOREIGN KEY (owner_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
@@ -24,6 +27,11 @@ CREATE TABLE UserFarms (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (farm_id) REFERENCES Farms(id) ON DELETE CASCADE,
     UNIQUE (user_id, farm_id) 
+);
+
+CREATE TABLE LivestockTypes (
+    id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
+    type CHAR(30) NOT NULL
 );
 
 CREATE TABLE Breeds (
@@ -44,19 +52,32 @@ CREATE TABLE Diseases (
     name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Certificates (
-    id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
-    livestock_id CHAR(36) NOT NULL,
-    pdf_url VARCHAR(255),
-    FOREIGN KEY (livestock_id) REFERENCES Livestock(id) ON DELETE CASCADE
-);
-
 CREATE TABLE PhasesConfiguration (
     id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
     farm_id CHAR(36) NOT NULL, 
     phase_name ENUM('CEMPE', 'DARA', 'SIAPKAWIN', 'HAMIL', 'BREASTFEEDING') NOT NULL,
     duration_months INT NOT NULL,
     FOREIGN KEY (farm_id) REFERENCES Farms(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Livestock (
+    id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
+    farm_id CHAR(36) NOT NULL,
+    name_id VARCHAR(50) NOT NULL, 
+    gender ENUM('MALE', 'FEMALE') NOT NULL,
+    breed_id CHAR(36) NOT NULL REFERENCES Breeds(id) ON DELETE SET NULL,
+    dob DATE NOT NULL,
+    weight DECIMAL(10, 2),
+    phase ENUM('CEMPE', 'DARA', 'SIAPKAWIN', 'HAMIL', 'MENYUSUI'),
+    photo_url VARCHAR(255),
+    mother_id CHAR(36), 
+    father_id CHAR(36), 
+    grade VARCHAR(50),
+    type_id CHAR(36) NOT NULL, 
+    FOREIGN KEY (farm_id) REFERENCES Farms(id) ON DELETE CASCADE,
+    FOREIGN KEY (mother_id) REFERENCES Livestock(id) ON DELETE SET NULL,
+    FOREIGN KEY (father_id) REFERENCES Livestock(id) ON DELETE SET NULL,
+    UNIQUE (farm_id, name_id) -- Custom ID must be unique per farm
 );
 
 CREATE TABLE Lactation (
@@ -69,11 +90,6 @@ CREATE TABLE Lactation (
     colostrum_quantity DECIMAL(10, 2), 
     birth_date DATE NOT NULL, 
     FOREIGN KEY (livestock_id) REFERENCES Livestock(id) ON DELETE CASCADE
-);
-
-CREATE TABLE LivestockTypes (
-    id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
-    type CHAR(30) NOT NULL
 );
 
 CREATE TABLE LivestockMedication (
@@ -102,31 +118,18 @@ CREATE TABLE LivestockDisease (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Livestock (
-    id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
-    farm_id CHAR(36) NOT NULL,
-    name_id VARCHAR(50) NOT NULL, 
-    gender ENUM('MALE', 'FEMALE') NOT NULL,
-    breed_id CHAR(36) NOT NULL REFERENCES Breeds(id) ON DELETE SET NULL,
-    dob DATE NOT NULL,
-    weight DECIMAL(10, 2),
-    phase ENUM('CEMPE', 'DARA', 'SIAPKAWIN', 'HAMIL', 'MENYUSUI'),
-    photo_url VARCHAR(255),
-    mother_id CHAR(36), 
-    father_id CHAR(36), 
-    grade VARCHAR(50),
-    type_id CHAR(36) NOT NULL, 
-    FOREIGN KEY (farm_id) REFERENCES Farms(id) ON DELETE CASCADE,
-    FOREIGN KEY (mother_id) REFERENCES Livestock(id) ON DELETE SET NULL,
-    FOREIGN KEY (father_id) REFERENCES Livestock(id) ON DELETE SET NULL,
-    UNIQUE (farm_id, name_id) -- Custom ID must be unique per farm
-);
-
 CREATE TABLE MilkProduction (
     id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
     livestock_id CHAR(36) NOT NULL, 
     dateOfProduction DATE NOT NULL,
     quantity DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (livestock_id) REFERENCES Livestock(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Certificates (
+    id CHAR(36) DEFAULT (UUID()) PRIMARY KEY,
+    livestock_id CHAR(36) NOT NULL,
+    pdf_url VARCHAR(255),
     FOREIGN KEY (livestock_id) REFERENCES Livestock(id) ON DELETE CASCADE
 );
 
