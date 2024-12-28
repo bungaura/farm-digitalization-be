@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const { getHomePage } = require("./LandingPage.js");
+const { getHomePage } = require("./middlewares/LandingPage.js");
 const userRoutes = require("./routers/Users.router.js");
 const livestockRoutes = require("./routers/Livestock.router.js");
 
