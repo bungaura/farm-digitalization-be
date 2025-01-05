@@ -9,7 +9,7 @@ exports.getAllLivestocks = async function () {
     if (!livestocks || livestocks.length === 0) {
       return "No livestocks found";
     }
-    return users.map((livestock) => livestock.get({ plain: true }));
+    return livestocks.map((livestock) => livestock.get({ plain: true }));
   } catch (error) {
     console.error("Error fetching users:", error.message);
     throw error;

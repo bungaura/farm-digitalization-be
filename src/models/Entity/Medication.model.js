@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database/database");
+const sequelize = require("../../database/database");
+const MedicationType = require("../Enum/MedicationType.enum");
 
 const Medication = sequelize.define("Medication", {
   id: {
@@ -12,7 +13,7 @@ const Medication = sequelize.define("Medication", {
     allowNull: false,
   },
   type: {
-    type: DataTypes.ENUM("VITAMIN", "VACCINE", "MEDICINE"),
+    type: DataTypes.ENUM(...Object.values(MedicationType)),
     allowNull: false,
   },
 });
