@@ -5,6 +5,7 @@ const LivestockType = require("../models/Entity/LivestockType.model");
 const LivestockCustomIds = require("../models/Entity/LivestockCustomIds.model");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize"); // Tambahkan ini
+const Lactation = require("../models/Entity/Lactation.model");
 
 exports.getAllLivestocks = async function () {
   try {
@@ -64,13 +65,11 @@ exports.createNewLivestock = async function (params, body) {
     const type = await LivestockType.findByPk(typeId);
     if (!type) throw new Error("Type not found");
 
-    //check if male cannot have phase like dara, hamil, menyusui
     const femaleOnlyPhases = ["DARA", "HAMIL", "MENYUSUI"];
     if (gender == "MALE" && femaleOnlyPhases.includes(phase)) {
       throw new Error(`Male livestock cannot have phase "${phase}".`);
     }
 
-    // Generate finalNameId berdasarkan custom ID atau default numbering
     let finalNameId;
     let customIdRecord = await LivestockCustomIds.findOne({
       where: { farm_id: farmId, type_id: typeId },
@@ -79,7 +78,6 @@ exports.createNewLivestock = async function (params, body) {
     console.log("Custom ID Record:", customIdRecord); // Debug log
 
     if (customIdRecord) {
-      // Jika ada custom prefix, gunakan custom prefix + increment number
       const nextNumber = customIdRecord.last_number + 1;
       finalNameId = `${customIdRecord.custom_prefix}${String(
         nextNumber
@@ -198,6 +196,48 @@ exports.getFilteredLivestocks = async function (queryParams) {
     return livestocks.map((livestock) => livestock.get({ plain: true }));
   } catch (error) {
     console.error("Error fetching filtered livestocks:", error.message);
+    throw error;
+  }
+};
+
+exports.changeLivestockPhase = async function (params, body) {
+  try {
+    const { livestockId } = params;
+    if (!livestockId || livestockId === ":livestockId")
+      throw new Error("Livestock ID is required.");
+
+    const { phase } = body;
+    if (!phase) throw new Error("Phase to be changed is required.");
+
+    const livestock = await Livestock.findByPk(livestockId);
+    if (!livestock) throw new Error("Livestock not found.");
+
+    if (
+      livestock.gender === "MALE" &&
+      ["DARA", "HAMIL", "MENYUSUI", "PEMULIHAN"].includes(phase)
+    ) {
+      throw new Error("Male livestock cannot have this phase.");
+    }
+
+    if (phase === "HAMIL") {
+      // Cek apakah ada spouse yang sudah ditambahkan sebelumnya
+      const latestLactation = await Lactation.findOne({
+        where: { livestock_id: livestockId },
+        order: [["lactation_number", "DESC"]],
+      });
+
+      if (!latestLactation || !latestLactation.spouse_id) {
+        throw new Error(
+          "Cannot change phase to HAMIL. Please add a spouse first."
+        );
+      }
+    }
+
+    // Update livestock phase
+    livestock.phase = phase;
+    await livestock.save();
+    return { message: "Livestock phase updated successfully.", livestock };
+  } catch (error) {
     throw error;
   }
 };
