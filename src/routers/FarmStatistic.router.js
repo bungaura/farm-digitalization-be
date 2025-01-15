@@ -12,4 +12,15 @@ router.get(
   farmStatisticController.getMilkProductionByFarmId
 );
 
+router.get(
+  "/livestock-sold-count/:farmId",
+  farmStatisticController.getLivestockSoldCountByFarmId
+);
+
+
+// router.get(
+//   "/lactation-count/:farmId",
+//   farmStatisticController.getLactationCountByFarmId
+// );
+
 module.exports = router;

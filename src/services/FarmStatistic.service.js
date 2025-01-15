@@ -98,3 +98,49 @@ exports.getMilkProductionByFarmId = async function (path, query) {
     throw error;
   }
 };
+
+exports.getLivestockSoldCountByFarmId = async function (path, query) {
+  try {
+    const { farmId } = path;
+    const { type, year } = query;
+
+    if (!farmId || farmId === ":farmId") {
+      throw new Error("Farm ID is required.");
+    }
+
+    if (!type) {
+      throw new Error("Livestock Type is required.");
+    }
+
+    if (!year) {
+      throw new Error("Year is required.");
+    }
+
+    includeOptions = [{
+        model: LivestockType,
+        where: { type: type.toUpperCase() },
+        attributes: []
+    }];
+
+    const livestockSoldData = await Livestock.findAll({
+      where: {
+        status: "TERJUAL",
+        updatedAt: sequelize.where(sequelize.fn('YEAR', sequelize.col('updatedAt')), year),
+      },
+      include: includeOptions,
+      attributes: ["id", "updatedAt", "status"],
+    });
+    
+    const monthlyLivestockSold = new Array(12).fill(0);
+    livestockSoldData.forEach((record) => {
+      const month = new Date(record.updatedAt).getMonth();
+      monthlyLivestockSold[month] += 1;
+    });
+    
+    return monthlyLivestockSold.map((total, index) => ({month: index + 1, total_quantity: total}));    
+
+  } catch (error) {
+    console.error("Error getting number of livestock:", error.message);
+    throw error;
+  }
+};
