@@ -62,10 +62,24 @@ sequelize
   .catch((error) => console.error("Error fetching disease:", error));
 
 sequelize
-  .query("SELECT * FROM Farm")
+  .query("SELECT * FROM LivestockTypes")
   .then(([results, metadata]) => {
-    console.log("MilkProduction:", results);
+    console.log("LivestockType:", results);
   })
-  .catch((error) => console.error("Error fetching disease:", error));
+  .catch((error) => console.error("Error fetching LivestockType:", error));
+
+sequelize
+  .query("SELECT * FROM LivestockCustomIds")
+  .then(([results, metadata]) => {
+    console.log("LivestockCustomIds:", results);
+  })
+  .catch((error) => console.error("Error fetching LivestockCustomIds:", error));
+
+// sequelize
+//   .query("SELECT * FROM Farm")
+//   .then(([results, metadata]) => {
+//     console.log("MilkProduction:", results);
+//   })
+//   .catch((error) => console.error("Error fetching disease:", error));
 
 module.exports = sequelize;
