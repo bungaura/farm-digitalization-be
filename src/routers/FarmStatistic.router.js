@@ -22,6 +22,10 @@ router.get(
   farmStatisticController.getAverageMilkProductionByYear
 );
 
+router.get(
+  "/average-lactation-count/:year",
+  farmStatisticController.getAverageLactationByYear
+);
 // router.get(
 //   "/lactation-count/:farmId",
 //   farmStatisticController.getLactationCountByFarmId

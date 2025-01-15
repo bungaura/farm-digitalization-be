@@ -91,7 +91,7 @@ exports.getMilkProductionByFarmId = async function (path, query) {
     return monthlyMilkProduction.map((total, index) => ({month: index + 1, total_quantity: total}));    
 
   } catch (error) {
-    console.error("Error getting number of livestock:", error.message);
+    console.error("Error getting number of Monthly Milk Production Count:", error.message);
     throw error;
   }
 };
@@ -183,23 +183,86 @@ exports.getAverageMilkProductionByYear = async function (path, query) {
       const quantity = parseFloat(record.quantity);
       
       if (!milkProductionSummary[year]) {
-        milkProductionSummary[year] = { totalQuantity: 0, count: 0 };
+        milkProductionSummary[year] = { total_quantity: 0, count: 0 };
       }
     
-      milkProductionSummary[year].totalQuantity += quantity;
+      milkProductionSummary[year].total_quantity += quantity;
       milkProductionSummary[year].count += 1;
     });
     
     const averageMilkProductionPerYear = {};
     for (const year in milkProductionSummary) {
-      const { totalQuantity, count } = milkProductionSummary[year];
-      averageMilkProductionPerYear[year] = totalQuantity / count;
+      const { total_quantity, count } = milkProductionSummary[year];
+      averageMilkProductionPerYear[year] = total_quantity / count;
     }
     
     return averageMilkProductionPerYear;
 
   } catch (error) {
-    console.error("Error getting number of livestock:", error.message);
+    console.error("Error getting number of Average Milk Production By Year:", error.message);
     throw error;
   }
 };
+
+exports.getAverageLactationByYear = async function (path, query) {
+  try {
+    const { year } = path;
+    const { type } = query;
+
+    if (!year || year === ":year") {
+      throw new Error("Year is required.");
+    }
+
+    if (!type) {
+      throw new Error("Livestock Type is required.");
+    }
+
+    includeOptions = [
+      {
+        model: Livestock,
+        as: "Livestock",
+        include: [
+          {
+            model: LivestockType,
+            where: { type: type.toUpperCase() },
+            attributes: []
+          }
+        ],
+        attributes: []
+      }
+    ];
+
+    const lactationData = await Lactation.findAll({
+      where: sequelize.where(
+        sequelize.fn("YEAR", sequelize.col("Lactation.dob")), year),
+      include: includeOptions,
+      attributes: ["id", "dob", "total_child"],
+    });
+
+    const lactationSummary = {};
+    lactationData.forEach((record) => {
+      const year = new Date(record.dob).getFullYear();
+      const quantity = parseFloat(record.total_child);
+      
+      if (!lactationSummary[year]) {
+        lactationSummary[year] = { total_quantity: 0, count: 0 };
+      }
+    
+      lactationSummary[year].total_quantity += quantity;
+      lactationSummary[year].count += 1;
+    });
+    
+    const averageLactationPerYear = {};
+    for (const year in lactationSummary) {
+      const { total_quantity, count } = lactationSummary[year];
+      averageLactationPerYear[year] = total_quantity / count;
+    }
+    
+    return averageLactationPerYear;
+
+  } catch (error) {
+    console.error("Error getting number of Average Lactation By Year:", error.message);
+    throw error;
+  }
+};
+

@@ -36,6 +36,14 @@ exports.getAverageMilkProductionByYear = async function (req, res) {
   }
 };
 
+exports.getAverageLactationByYear = async function (req, res) {
+  try {
+    const result = await farmStatisticService.getAverageLactationByYear(req.params, req.query);
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 // exports.getLactationCountByFarmId = async function (req, res) {
 //   try {
 //     const result = await farmStatisticService.getLactationCountByFarmId(req.params, req.query);
