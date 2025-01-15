@@ -14,6 +14,7 @@ const milkProductionRoutes = require("./routers/MilkProduction.router.js");
 const phasesConfigurationRoutes = require("./routers/PhasesConfiguration.router.js");
 const settingsRoutes = require("./routers/Settings.router.js");
 // const lactationRoutes = require("./routers/Lactation.router.js");
+const farmRoutes = require("./routers/Farm.router.js")
 
 app.use(bodyParser.json());
 
@@ -23,6 +24,7 @@ app.use("/livestock", livestockRoutes);
 app.use("/milkProduction", milkProductionRoutes);
 app.use("/phasesConfiguration", phasesConfigurationRoutes);
 app.use("/settings", settingsRoutes);
+app.use("/farm", farmRoutes);
 app.use("/qr", settingsRoutes);
 
 // app.use("/lactation", lactationRoutes);
