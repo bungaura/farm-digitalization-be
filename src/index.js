@@ -24,6 +24,7 @@ app.use("/milkProduction", milkProductionRoutes);
 app.use("/lactation", lactationRoutes);
 app.use("/phasesConfiguration", phasesConfigurationRoutes);
 app.use("/settings", settingsRoutes);
+app.use("/qr", settingsRoutes);
 
 // app.use("/lactation", lactationRoutes);
 

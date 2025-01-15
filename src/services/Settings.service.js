@@ -1,5 +1,6 @@
 const LivestockCustomIds = require("../models/Entity/LivestockCustomIds.model");
 const LivestockType = require("../models/Entity/LivestockType.model");
+const LivestockCustomDurationPhase = require("../models/Entity/LivestockCustomDurationPhase.model");
 
 exports.setCustomId = async function (params, body) {
   try {
@@ -34,3 +35,44 @@ exports.setCustomId = async function (params, body) {
     throw error;
   }
 };
+
+exports.setDurationPhase = async function (params, body) {
+  try {
+    const { farmId } = params;
+    if (!farmId || farmId === ":farmId") {
+      throw new Error("Farm ID is required.");
+    }
+
+    const { 
+      cempe_phase_in_month, 
+      dara_phase_in_month, 
+      siap_kawin_phase_in_month,
+      hamil_phase_in_month, 
+      menyusui_phase_in_month} 
+    = body;
+
+    // const farm = await Farm.findByPk(farmId);
+    // farm.
+
+    const existingDurationPhase = await LivestockCustomDurationPhase.findOne({
+      where: { farm_id: farmId},
+    });
+
+    if (existingDurationPhase) {
+      await existingDurationPhase.update(body)
+      return { message: "Duration Phase updated successfully.",  };
+    } else {
+      const newDurationPhase = await LivestockCustomDurationPhase.create({
+        farm_id: farmId,
+        cempe_phase_in_month: cempe_phase_in_month,
+        dara_phase_in_month: dara_phase_in_month,
+        siap_kawin_phase_in_month: siap_kawin_phase_in_month, 
+        hamil_phase_in_month: hamil_phase_in_month, 
+        menyusui_phase_in_month: menyusui_phase_in_month
+      });
+      return { message: "Duration Phase created successfully.", newDurationPhase };
+    }
+  } catch (error) {
+    throw error;
+  }
+}
