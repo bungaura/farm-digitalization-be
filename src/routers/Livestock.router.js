@@ -9,6 +9,11 @@ router.post(
   livestockController.createNewLivestock
 );
 
+router.get(
+  "/get-filtered-livestocks",
+  livestockController.getFilteredLivestocks
+);
+
 // router.put("/change-livestock-phase/:livestockId", livestockController);
 
 module.exports = router;
