@@ -7,4 +7,9 @@ router.get(
   farmStatisticController.getLivestockCountByFarmId
 );
 
+router.get(
+  "/milk-production-count/:farmId",
+  farmStatisticController.getMilkProductionByFarmId
+);
+
 module.exports = router;
