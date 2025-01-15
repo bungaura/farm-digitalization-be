@@ -2,7 +2,7 @@ const livestockService = require("../services/Livestock.service");
 
 exports.getAllLivestocks = async function (req, res) {
   try {
-    const result = await livestockService.getAllLivestocks(req.body);
+    const result = await livestockService.getAllLivestocks();
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

@@ -9,4 +9,6 @@ router.post(
   livestockController.createNewLivestock
 );
 
+// router.put("/change-livestock-phase/:livestockId", livestockController);
+
 module.exports = router;

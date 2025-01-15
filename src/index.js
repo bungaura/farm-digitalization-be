@@ -10,11 +10,17 @@ const PORT = process.env.PORT || 3000;
 const { getHomePage } = require("./middlewares/LandingPage.js");
 const userRoutes = require("./routers/Users.router.js");
 const livestockRoutes = require("./routers/Livestock.router.js");
+const milkProductionRoutes = require("./routers/MilkProduction.router.js");
+const phasesConfigurationRoutes = require("./routers/PhasesConfiguration.router.js");
+// const lactationRoutes = require("./routers/Lactation.router.js");
 
 app.use(bodyParser.json());
 
 app.get("/", getHomePage);
 app.use("/user", userRoutes);
 app.use("/livestock", livestockRoutes);
+app.use("/milkProduction", milkProductionRoutes);
+app.use("/phasesConfiguration", phasesConfigurationRoutes);
+// app.use("/lactation", lactationRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:3000/`));

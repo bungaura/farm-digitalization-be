@@ -9,9 +9,9 @@ exports.getAllLivestocks = async function () {
     if (!livestocks || livestocks.length === 0) {
       return "No livestocks found";
     }
-    return users.map((livestock) => livestock.get({ plain: true }));
+    return livestocks.map((livestock) => livestock.get({ plain: true }));
   } catch (error) {
-    console.error("Error fetching users:", error.message);
+    console.error("Error fetching livestock:", error.message);
     throw error;
   }
 };
@@ -35,7 +35,7 @@ exports.createNewLivestock = async function (params, body) {
       typeId,
     } = body;
 
-    //TODO: tambah logic kalo nameId sama di farmId yang sama gaboleh
+    //TODO: tambah logic kalo nameId sama di farmId yang sama gaboleh, mother_id & father_id belum
     if (!nameId) throw new Error("Name ID is required.");
     if (!gender) throw new Error("Gender is required.");
     if (!dob) throw new Error("DOB is required.");
@@ -58,9 +58,28 @@ exports.createNewLivestock = async function (params, body) {
     const type = await LivestockType.findByPk(typeId);
     if (!type) throw new Error("Type not found");
 
+    // / Generate the default nameId if not provided
+    let finalNameId = nameId || "0001";
+
+    // Add custom suffix if provided
+    if (customSuffix) {
+      finalNameId += `(${customSuffix})`;
+    }
+
+    //tambah validasi custom suffix if null gabisa
+    // if ()
+
+    // Check if nameId is unique within the farm
+    const existingLivestock = await Livestock.findOne({
+      where: { farm_id: farmId, name_id: finalNameId },
+    });
+    if (existingLivestock) {
+      throw new Error("Name ID must be unique within the same farm.");
+    }
+
     const newLivestock = await Livestock.create({
       farm_id: farmId,
-      name_id: nameId,
+      name_id: finalNameId,
       gender: gender,
       dob: dob,
       weight: weight,
@@ -75,4 +94,22 @@ exports.createNewLivestock = async function (params, body) {
     console.error("Error creating new livestock:", error.message);
     throw error;
   }
+
+  //   const newLivestock = await Livestock.create({
+  //     farm_id: farmId,
+  //     name_id: nameId,
+  //     gender: gender,
+  //     dob: dob,
+  //     weight: weight,
+  //     phase: phase,
+  //     photo_url: photoUrl,
+  //     grade: grade,
+  //     breed_id: breedId,
+  //     type_id: typeId,
+  //   });
+  //   return newLivestock.get({ plain: true });
+  // } catch (error) {
+  //   console.error("Error creating new livestock:", error.message);
+  //   throw error;
+  // }
 };
