@@ -13,6 +13,7 @@ const livestockRoutes = require("./routers/Livestock.router.js");
 const milkProductionRoutes = require("./routers/MilkProduction.router.js");
 const phasesConfigurationRoutes = require("./routers/PhasesConfiguration.router.js");
 const settingsRoutes = require("./routers/Settings.router.js");
+const farmStatisticRoutes = require("./routers/FarmStatistic.router.js");
 const lactationRoutes = require("./routers/Lactation.router.js");
 const farmRoutes = require("./routers/Farm.router.js")
 
@@ -29,5 +30,6 @@ app.use("/farm", farmRoutes);
 app.use("/qr", settingsRoutes);
 
 // app.use("/lactation", lactationRoutes);
+app.use("/farm", farmStatisticRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:3000/`));
