@@ -5,6 +5,7 @@ const LivestockPhase = Object.freeze({
   SIAPKAWIN: "SIAP KAWIN",
   HAMIL: "HAMIL",
   MENYUSUI: "MENYUSUI",
+  PEMULIHAN: "PEMULIHAN",
   AFKIR: "AFKIR",
 });
 
