@@ -5,7 +5,7 @@ const livestockController = require("../controllers/Livestock.controller");
 router.get("/get-all-livestocks", livestockController.getAllLivestocks);
 
 router.get("/get-farm-livestocks/:farmId", livestockController.getFarmLivestocks);
-router.get("/get-livestock-detail/:nameId", livestockController.getLivestockDetail);
+router.get("/get-livestock-detail/:livestockId", livestockController.getLivestockDetail);
 
 router.post(
   "/create-new-livestock/:farmId",

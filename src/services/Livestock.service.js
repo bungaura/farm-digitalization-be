@@ -252,13 +252,13 @@ exports.getFarmLivestocks = async function (param) {
 
 exports.getLivestockDetail = async function (param) {
   try {
-    const { nameId } = param;
-    if (!nameId || nameId === ":nameId") {
+    const { livestockId } = param;
+    if (!livestockId || livestockId === ":nameId") {
       throw new Error("Name Id is required.");
     }
 
     const livestock = await Livestock.findOne(
-      { where: {name_id: nameId}}
+      { where: {id: livestockId}}
     );
     if (!livestock || livestock.length === 0) {
       return "No livestocks found";
