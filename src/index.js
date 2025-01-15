@@ -23,6 +23,7 @@ app.use("/livestock", livestockRoutes);
 app.use("/milkProduction", milkProductionRoutes);
 app.use("/phasesConfiguration", phasesConfigurationRoutes);
 app.use("/settings", settingsRoutes);
+app.use("/qr", settingsRoutes);
 
 // app.use("/lactation", lactationRoutes);
 
