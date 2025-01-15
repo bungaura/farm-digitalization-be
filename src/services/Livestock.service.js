@@ -227,3 +227,46 @@ exports.getFilteredLivestocks = async function (queryParams) {
     throw error;
   }
 };
+
+exports.getFarmLivestocks = async function (param) {
+  try {
+    const { farmId } = param;
+    if (!farmId || farmId === ":farmId") {
+      throw new Error("Farm ID is required.");
+    }
+
+    const livestocks = await Livestock.findAll(
+      { where: {farm_id: farmId}}
+    );
+    if (!livestocks || livestocks.length === 0) {
+      return "No livestocks found";
+    }
+
+    return livestocks.map((livestock) => livestock.get({ plain: true }));
+  } catch (error) {
+    console.error("Error fetching livestock:", error.message);
+    throw error;
+  }
+}
+
+
+exports.getLivestockDetail = async function (param) {
+  try {
+    const { nameId } = param;
+    if (!nameId || nameId === ":nameId") {
+      throw new Error("Name Id is required.");
+    }
+
+    const livestock = await Livestock.findOne(
+      { where: {name_id: nameId}}
+    );
+    if (!livestock || livestock.length === 0) {
+      return "No livestocks found";
+    }
+    
+    return livestock;
+  } catch (error) {
+    console.error("Error fetching livestock:", error.message);
+    throw error;
+  }
+}
