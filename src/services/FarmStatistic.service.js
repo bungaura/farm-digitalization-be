@@ -85,9 +85,6 @@ exports.getMilkProductionByFarmId = async function (path, query) {
       const month = new Date(record.dateOfProduction).getMonth();
       const quantity = parseFloat(record.quantity);
 
-      if (!monthlyMilkProduction[month]) {
-        monthlyMilkProduction[month] = 0;
-      }
       monthlyMilkProduction[month] += quantity;
     });
     
@@ -138,6 +135,68 @@ exports.getLivestockSoldCountByFarmId = async function (path, query) {
     });
     
     return monthlyLivestockSold.map((total, index) => ({month: index + 1, total_quantity: total}));    
+
+  } catch (error) {
+    console.error("Error getting number of livestock:", error.message);
+    throw error;
+  }
+};
+
+exports.getAverageMilkProductionByYear = async function (path, query) {
+  try {
+    const { year } = path;
+    const { type } = query;
+
+    if (!year || year === ":year") {
+      throw new Error("Year is required.");
+    }
+
+    if (!type) {
+      throw new Error("Livestock Type is required.");
+    }
+
+    includeOptions = [
+      {
+        model: Livestock,
+        include: [
+          {
+            model: LivestockType,
+            where: { type: type.toUpperCase() },
+            attributes: []
+          }
+        ],
+        attributes: []
+      }
+    ];
+
+    const milkProductionData = await MilkProduction.findAll({
+      where: {
+        dateOfProduction: sequelize.where(sequelize.fn('YEAR', sequelize.col('dateOfProduction')), year)
+      },
+      include: includeOptions,
+      attributes: ["id", "dateOfProduction", "quantity"],
+    });
+
+    const milkProductionSummary = {};
+    milkProductionData.forEach((record) => {
+      const year = new Date(record.dateOfProduction).getFullYear();
+      const quantity = parseFloat(record.quantity);
+      
+      if (!milkProductionSummary[year]) {
+        milkProductionSummary[year] = { totalQuantity: 0, count: 0 };
+      }
+    
+      milkProductionSummary[year].totalQuantity += quantity;
+      milkProductionSummary[year].count += 1;
+    });
+    
+    const averageMilkProductionPerYear = {};
+    for (const year in milkProductionSummary) {
+      const { totalQuantity, count } = milkProductionSummary[year];
+      averageMilkProductionPerYear[year] = totalQuantity / count;
+    }
+    
+    return averageMilkProductionPerYear;
 
   } catch (error) {
     console.error("Error getting number of livestock:", error.message);

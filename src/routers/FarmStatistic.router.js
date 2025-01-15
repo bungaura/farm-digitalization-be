@@ -8,15 +8,19 @@ router.get(
 );
 
 router.get(
-  "/milk-production-count/:farmId",
+  "/monthly-milk-production-count/:farmId",
   farmStatisticController.getMilkProductionByFarmId
 );
 
 router.get(
-  "/livestock-sold-count/:farmId",
+  "/monthly-livestock-sold-count/:farmId",
   farmStatisticController.getLivestockSoldCountByFarmId
 );
 
+router.get(
+  "/average-milk-production-count/:year",
+  farmStatisticController.getAverageMilkProductionByYear
+);
 
 // router.get(
 //   "/lactation-count/:farmId",
