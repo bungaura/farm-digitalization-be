@@ -33,12 +33,12 @@ sequelize
 sequelize.query("SHOW TABLES").then(([results, metadata]) => {
   console.log("Tables in the database:", results);
 });
-sequelize
-  .query("SELECT * FROM Livestock")
-  .then(([results, metadata]) => {
-    console.log("Livestock:", results);
-  })
-  .catch((error) => console.error("Error fetching livestock:", error));
+// sequelize
+//   .query("SELECT * FROM Livestock")
+//   .then(([results, metadata]) => {
+//     console.log("Livestock:", results);
+//   })
+//   .catch((error) => console.error("Error fetching livestock:", error));
 
 sequelize
   .query("SELECT * FROM Breeds")
@@ -74,6 +74,20 @@ sequelize
     console.log("LivestockCustomIds:", results);
   })
   .catch((error) => console.error("Error fetching LivestockCustomIds:", error));
+
+sequelize
+  .query("SELECT * FROM Farms")
+  .then(([results, metadata]) => {
+    console.log("Farm:", results);
+  })
+  .catch((error) => console.error("Error fetching Farm:", error));
+
+sequelize
+  .query("SELECT * FROM Lactation")
+  .then(([results, metadata]) => {
+    console.log("Lactation:", results);
+  })
+  .catch((error) => console.error("Error fetching Lactation:", error));
 
 // sequelize
 //   .query("SELECT * FROM Farm")
