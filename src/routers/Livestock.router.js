@@ -17,6 +17,9 @@ router.get(
   livestockController.getFilteredLivestocks
 );
 
-// router.put("/change-livestock-phase/:livestockId", livestockController);
+router.put(
+  "/change-livestock-phase/:livestockId",
+  livestockController.changeLivestockPhase
+);
 
 module.exports = router;
