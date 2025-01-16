@@ -200,7 +200,6 @@ exports.getFilteredLivestocks = async function (queryParams) {
   }
 };
 
-
 exports.changeLivestockPhase = async function (params, body) {
   try {
     const { livestockId } = params;
@@ -250,9 +249,7 @@ exports.getFarmLivestocks = async function (param) {
       throw new Error("Farm ID is required.");
     }
 
-    const livestocks = await Livestock.findAll(
-      { where: {farm_id: farmId}}
-    );
+    const livestocks = await Livestock.findAll({ where: { farm_id: farmId } });
     if (!livestocks || livestocks.length === 0) {
       return "No livestocks found";
     }
@@ -262,27 +259,23 @@ exports.getFarmLivestocks = async function (param) {
     console.error("Error fetching livestock:", error.message);
     throw error;
   }
-}
+};
 
-
-exports.getLivestockDetail = async function (param) {
+exports.getLivestockDetail = async function (params) {
   try {
-    const { nameId } = param;
-    if (!nameId || nameId === ":nameId") {
-      throw new Error("Name Id is required.");
+    const { livestockId } = params;
+    if (!livestockId || livestockId === ":livestockId") {
+      throw new Error("Livestock Id is required.");
     }
 
-    const livestock = await Livestock.findOne(
-      { where: {name_id: nameId}}
-    );
+    const livestock = await Livestock.findOne({ where: { id: livestockId } });
     if (!livestock || livestock.length === 0) {
       return "No livestocks found";
     }
-    
+
     return livestock;
   } catch (error) {
     console.error("Error fetching livestock:", error.message);
     throw error;
   }
-}
-
+};

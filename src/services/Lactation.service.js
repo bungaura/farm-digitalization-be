@@ -2,8 +2,37 @@ const Lactation = require("../models/Entity/Lactation.model");
 const Livestock = require("../models/Entity/Livestock.model");
 
 exports.getLactationDataByLivestockId = async function (params) {
-  //   try {
-  //   } catch (error) {}
+  try {
+    const { livestockId } = params;
+
+    if (!livestockId || livestockId === ":livestockId") {
+      throw new Error("Livestock ID is required.");
+    }
+
+    const lactationData = await Lactation.findAll({
+      where: { livestock_id: livestockId },
+      order: [["lactation_number", "DESC"]], // Sort by lactation number descending
+      attributes: [
+        "id",
+        "lactation_number",
+        "dob",
+        "total_child",
+        "total_male_child",
+        "total_female_child",
+      ],
+    });
+
+    if (!lactationData.length) {
+      return { success: true, message: "No lactation data found." };
+    }
+
+    return {
+      success: true,
+      data: lactationData,
+    };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
 };
 
 exports.addSpouse = async function (params, body) {
