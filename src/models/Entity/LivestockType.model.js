@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/database");
+const Livestock = require("../Entity/Livestock.model");
 
 const LivestockType = sequelize.define("LivestockType", {
   id: {
