@@ -33,11 +33,67 @@ sequelize
 sequelize.query("SHOW TABLES").then(([results, metadata]) => {
   console.log("Tables in the database:", results);
 });
+// sequelize
+//   .query("SELECT * FROM Livestock")
+//   .then(([results, metadata]) => {
+//     console.log("Livestock:", results);
+//   })
+//   .catch((error) => console.error("Error fetching livestock:", error));
+
 sequelize
-  .query("SELECT * FROM Livestock")
+  .query("SELECT * FROM Breeds")
   .then(([results, metadata]) => {
-    console.log("Livestock:", results);
+    console.log("Breed:", results);
   })
-  .catch((error) => console.error("Error fetching users:", error));
+  .catch((error) => console.error("Error fetching breed:", error));
+
+sequelize
+  .query("SELECT * FROM Diseases")
+  .then(([results, metadata]) => {
+    console.log("Diseases:", results);
+  })
+  .catch((error) => console.error("Error fetching disease:", error));
+
+sequelize
+  .query("SELECT * FROM MilkProduction")
+  .then(([results, metadata]) => {
+    console.log("MilkProduction:", results);
+  })
+  .catch((error) => console.error("Error fetching disease:", error));
+
+sequelize
+  .query("SELECT * FROM LivestockTypes")
+  .then(([results, metadata]) => {
+    console.log("LivestockType:", results);
+  })
+  .catch((error) => console.error("Error fetching LivestockType:", error));
+
+sequelize
+  .query("SELECT * FROM LivestockCustomIds")
+  .then(([results, metadata]) => {
+    console.log("LivestockCustomIds:", results);
+  })
+  .catch((error) => console.error("Error fetching LivestockCustomIds:", error));
+
+sequelize
+  .query("SELECT * FROM Farms")
+  .then(([results, metadata]) => {
+    console.log("Farm:", results);
+  })
+  .catch((error) => console.error("Error fetching Farm:", error));
+
+sequelize
+  .query("SELECT * FROM Lactation")
+  .then(([results, metadata]) => {
+    console.log("Lactation:", results);
+  })
+  .catch((error) => console.error("Error fetching Lactation:", error));
+
+// sequelize
+//   .query("SELECT * FROM Farm")
+//   .then(([results, metadata]) => {
+//     console.log("MilkProduction:", results);
+//   })
+//   .catch((error) => console.error("Error fetching disease:", error));
 
 module.exports = sequelize;

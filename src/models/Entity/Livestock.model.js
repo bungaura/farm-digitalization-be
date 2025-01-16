@@ -4,6 +4,9 @@ const Farm = require("../Entity/Farm.model");
 const Breed = require("../Entity/Breed.model");
 const LivestockGender = require("../Enum/LivestockGender.enum");
 const LivestockPhase = require("../Enum/LivestockPhase.enum");
+const LivestockType = require("../Entity/LivestockType.model");
+const LivestockCondition = require("../Enum/LivestockCondition.enum");
+const LivestockStatus = require("../Enum/LivestockStatus.enum");
 
 const Livestock = sequelize.define(
   "Livestock",
@@ -45,13 +48,28 @@ const Livestock = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    livestock_condition: {
+      type: DataTypes.ENUM(...Object.values(LivestockCondition)),
+    },
+    status: {
+      type: DataTypes.ENUM(...Object.values(LivestockStatus)),
+    },
   },
   {
     tableName: "Livestock",
-    timestamps: false,
+    timestamps: true,
   }
 );
 Livestock.belongsTo(Farm, { foreignKey: "farm_id", onDelete: "CASCADE" });
-Livestock.belongsTo(Breed, { foreignKey: "breed_id", onDelete: "SET NULL" });
+Livestock.belongsTo(Breed, {
+  foreignKey: "breed_id",
+  onDelete: "SET NULL",
+  as: "BreedAlias", // Alias yang sesuai
+});
+
+Livestock.belongsTo(LivestockType, {
+  foreignKey: "type_id",
+  onDelete: "CASCADE",
+});
 
 module.exports = Livestock;
