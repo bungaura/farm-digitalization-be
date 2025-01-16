@@ -249,12 +249,46 @@ exports.getFarmLivestocks = async function (param) {
       throw new Error("Farm ID is required.");
     }
 
-    const livestocks = await Livestock.findAll({ where: { farm_id: farmId } });
-    if (!livestocks || livestocks.length === 0) {
-      return "No livestocks found";
-    }
+    const livestocks = await Livestock.findAll({
+      where: { farm_id: farmId },
+      include: [
+        {
+          model: Breed,
+          as: "BreedAlias",
+          attributes: ["name"], // Include only the 'name' attribute from the Breed table
+        },
+        {
+          model: LivestockType,
+          attributes: ["type"], // Include only the 'type' attribute from the LivestockType table
+        },
+      ],
+    });
 
-    return livestocks.map((livestock) => livestock.get({ plain: true }));
+    const formattedLivestocks = livestocks.map((livestock) => {
+      const plainData = livestock.get({ plain: true });
+
+      // Add `breed` and `type` while removing `BreedAlias` and `LivestockType`
+      const breed = plainData.BreedAlias ? plainData.BreedAlias.name : null;
+      const type = plainData.LivestockType
+        ? plainData.LivestockType.type
+        : null;
+      delete plainData.BreedAlias;
+      delete plainData.LivestockType;
+
+      return {
+        ...plainData,
+        breed, // Add the derived breed field
+        type, // Add the derived type field
+      };
+    });
+
+    if (!livestocks || livestocks.length === 0) {
+      return { message: "No livestocks found" };
+    }
+    return {
+      message: "Successfully fetched farm livestocks",
+      data: formattedLivestocks,
+    };
   } catch (error) {
     console.error("Error fetching livestock:", error.message);
     throw error;
