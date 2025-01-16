@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ const logactivityRoutes = require("./routers/LogActivity.router.js");
 const notificationRoutes = require("./routers/Notification.router.js");
 
 app.use(bodyParser.json());
+app.use(cors({
+    origin:`*`
+}));
 
 app.get("/", getHomePage);
 app.use("/user", userRoutes);
