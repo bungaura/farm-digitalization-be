@@ -27,11 +27,11 @@ exports.getLactationDataByLivestockId = async function (params) {
     }
 
     return {
-      success: true,
+      message: "Lactation data fetched successfully",
       data: lactationData,
     };
   } catch (error) {
-    return { success: false, message: error.message };
+    throw error;
   }
 };
 
