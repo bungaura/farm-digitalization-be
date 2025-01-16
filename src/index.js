@@ -18,6 +18,8 @@ const lactationRoutes = require("./routers/Lactation.router.js");
 const farmRoutes = require("./routers/Farm.router.js");
 const logactivityRoutes = require("./routers/LogActivity.router.js");
 const notificationRoutes = require("./routers/Notification.router.js");
+const diseaseRoutes = require("./routers/Disease.router.js");
+const medicationRoutes = require("./routers/Medication.router.js");
 
 app.use(bodyParser.json());
 app.use(cors({
@@ -35,5 +37,7 @@ app.use("/qr", settingsRoutes);
 app.use("/logactivity", logactivityRoutes);
 app.use("/farm", farmStatisticRoutes);
 app.use("/notification", notificationRoutes);
+app.use("/disease", diseaseRoutes);
+app.use("/medication", medicationRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:3000/`));
